@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Catty</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style type="text/css">
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    }
+    
+    header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    }
+    
+    h1 {
+    margin: 0;
+    }
+    
+    nav {
+    float: right;
+    }
+    
+    nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    }
+    
+    nav li {
+    display: inline-block;
+    margin-left: 20px;
+    }
+    
+    nav a {
+    color: #fff;
+    text-decoration: none;
+    }
+    
+    main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    }
+    
+    section {
+    margin-bottom: 20px;
+    }
+    
+    h2 {
+    font-size: 36px;
+    margin-top: 0;
+    }
+    
+    iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+    }
+    
+    img {
+    width: 300px;
+    height: 200px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    object-fit: cover;
+    }
+    
+    footer {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    }
+    
+    
+    
+    
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>My Cat Vlog</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="videos.html">Videos</a></li>
+          <li><a href="photos.html">Photos</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h2>Welcome to Catty's World!</h2>
+      <p>Check out our latest videos and photos of our adorable cats!</p>
+      <section>
+        <h3>Featured Video</h3>
+        <iframe width="560" height="315" src="https://fb.watch/kf1ouCtOVG/?mibextid=RUbZ1f" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <p>This is a video of my cat, Mittens, playing with a toy mouse.</p>
+      </section>
+      <section>
+        <h3>Recent Photos</h3>
+        <img src="cat1.jpg" alt="My cat, Mittens">
+        <img src="cat2.jpg" alt="My cat, Whiskers">
+        <img src="cat3.jpg" alt="My cat, Fluffy">
+      </section>
+    </main>
+    <footer>
+      <p>&copy; Catty</p>
+    </footer>
+    
+    <script type="text/javascript">
+    // Get the navigation menu
+    const nav = document.querySelector('nav');
+    
+    // Add a click event listener to the navigation menu
+    nav.addEventListener('click', function(event) {
+    // Prevent the default behavior of the clicked link
+    event.preventDefault();
+    
+    // Get the href of the clicked link
+    const href = event.target.getAttribute('href');
+    
+    // Get the section with the matching ID
+    const section = document.querySelector(href);
+    
+    // Scroll to the section
+    section.scrollIntoView({ behavior: 'smooth' });
+    
+    // Remove the 'active' class from all navigation links
+    const links = nav.querySelectorAll('a');
+    links.forEach(link => link.classList.remove('active'));
+    
+    // Add the 'active' class to the clicked navigation link
+    event.target.classList.add('active');
+    });
+    
+    // Highlight the current section in the navigation menu
+    function highlightCurrentSection() {
+    // Get the current scroll position
+    const currentScrollPos = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    
+    // Get all the sections
+    const sections = document.querySelectorAll('section');
+    
+    // Loop through the sections
+    sections.forEach(section => {
+    // Get the top and bottom positions of the section
+    const topPos = section.offsetTop - 50;
+    const bottomPos = topPos + section.offsetHeight - 50;
+    
+    // Check if the current scroll position is within the section
+    if (currentScrollPos >= topPos && currentScrollPos < bottomPos) {
+    // Remove the 'active' class from all navigation links
+    const links = nav.querySelectorAll('a');
+    links.forEach(link => link.classList.remove('active'));
+    
+    // Get the corresponding navigation link and add the 'active' class to it
+    const href = `#${section.id}`;
+    const link = nav.querySelector(`a[href="${href}"]`);
+    link.classList.add('active');
+    }
+    });
+    }
+    
+    // Add a scroll event listener to highlight the current section in the navigation menu
+    window.addEventListener('scroll', highlightCurrentSection);
+    
+    
+    // Get the video section
+    const videoSection = document.querySelector('section:nth-of-type(1)');
+    
+    // Add a click event listener to the video section
+    videoSection.addEventListener('click', function() {
+    // Get the iframe inside the video section
+    const iframe = videoSection.querySelector('iframe');
+    
+    // Pause the video
+    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+    });
+    
+    // Get the photo section
+    const photoSection = document.querySelector('section:nth-of-type(2)');
+    
+    // Add a click event listener to the photo section
+    photoSection.addEventListener('click', function(event) {
+    // Check if the clicked element is an image
+    if (event.target.tagName === 'IMG') {
+    // Create a modal to display the full-size image
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.innerHTML = `
+    <div class="modal-content">
+    <span class="close">&times;</span>
+    <img src="${event.target.src}" alt="${event.target.alt}">
+    </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Get the close button inside the modal
+    const closeButton = modal.querySelector('.close');
+    
+    // Add a click event listener to the close button
+    closeButton.addEventListener('click', function() {
+    // Remove the modal from the DOM
+    modal.remove();
+    });
+    }
+    });
+    
+    // Get the navigation menu
+    const nav = document.querySelector('nav');
+    
+    // Add a click event listener to the navigation menu
+    nav.addEventListener('click', function(event) {
+    // Prevent the default behavior of the clicked link
+    event.preventDefault();
+    
+    // Get the href of the clicked link
+    const href = event.target.getAttribute('href');
+    
+    // Get the section with the matching ID
+    const section = document.querySelector(href);
+    
+    // Scroll to the section
+    section.scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    
+    </script>
+  </body>
+</html>
